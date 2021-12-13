@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@react-navigation/native": "^6.0.6",
+    "dotenv": "^10.0.0",
+    "mongodb": "^4.2.1",
+    "mongoose": "^6.1.1",
+    "node-fetch": "^2.6.6",
+    "react-native-navbar": "^2.1.0",
+    "react-native-navigation-bar": "^0.2.1",
+    "react-native-safe-area-context": "^3.3.2",
+    "react-native-screens": "^3.10.1"
+  }
+}
