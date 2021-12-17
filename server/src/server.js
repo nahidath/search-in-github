@@ -6,12 +6,17 @@ const Users = require('./models/users');
 const mongoose = require('mongoose');
 const url = "mongodb+srv://iam:tototata@cluster0.lsevu.mongodb.net/usersGit?retryWrites=true&w=majority";
 const dbName = 'usersGit';
-let db = null;
+let db;
 
+/*
 MongoClient.connect(url, function(err, client) {
     console.log("Connecté à MongoDB");
     db = client.db(dbName);
+
 });
+*/
+
+
 
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
 db = mongoose.connection;
@@ -24,7 +29,7 @@ export function launch(port) {
     const application = express();
 
     application.use(function(req, res, next) {
-        res.header("Access-Control-Allow-Origin", "YOUR-DOMAIN.TLD"); // update to match the domain you will make the request from
+        res.header("Access-Control-Allow-Origin"); // update to match the domain you will make the request from
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
@@ -34,13 +39,18 @@ export function launch(port) {
             //if false ->Request Github API https://api.github.com/users/$USERNAME
             //          -> stocker en bdd puis l'envoyer en response
 
+
         const username = req.params.username;
-        const users = await Users.findOne({username});
+        console.log(username);
+        const users = await db.collection("users").findOne({"login":req.params.username});
+        console.log(users)
         try {
             if(!users){
                 try{
                     const gitUrl = await fetch(`https://api.github.com/users/${username}`);
                     const resultFetch = await gitUrl.json();
+                    db.collection('users').insertOne(resultFetch);
+                    console.log("inserted");
                     res.send(resultFetch);
                 }catch (e) {
                     console.log('Looks like there was a problem: ', e);
